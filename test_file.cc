@@ -1,60 +1,16 @@
 // #include <iostream>
+// #include <cctype>
+// #include <random>
 
-// // Funktion zum diagonalen Spiegeln eines Sudoku-Feldes
-// void diagonaleSpiegelung(int (&sudokuFeld)[9][9], int (&spiegelFeld)[90])
+// int main( void )
 // {
-//     // Kopiere die Werte des Sudoku-Feldes in das 90-Felder große Array
-//     for (int i = 0; i < 9; ++i)
-//     {
-//         for (int j = 0; j < 9; ++j)
-//         {
-//             spiegelFeld[i * 9 + j] = sudokuFeld[i][j];
-//         }
-//     }
+//   std::random_device os_seed;
+//   const uint_least32_t seed = os_seed();
+  
+//   std::mt19937 generator( seed );
+//   std::uniform_int_distribution< uint_least32_t > distribute( 0, 90 );
 
-//     // Diagonale Spiegelung durchführen
-//     for (int i = 0; i < 9; ++i)
-//     {
-//         for (int j = 0; j < 9; ++j)
-//         {
-//             int index = i * 9 + j;
-//             int spiegelIndex = j * 9 + i;
-
-//             // Werte austauschen
-//             int temp = spiegelFeld[index];
-//             spiegelFeld[index] = spiegelFeld[spiegelIndex];
-//             spiegelFeld[spiegelIndex] = temp;
-//         }
-//     }
-// }
-
-// int main()
-// {
-//     int sudokuFeld[9][9] = {
-//         {1, 2, 3, 4, 5, 6, 7, 8, 9},
-//         {4, 5, 6, 7, 8, 9, 1, 2, 3},
-//         {7, 8, 9, 1, 2, 3, 4, 5, 6},
-//         {2, 3, 4, 5, 6, 7, 8, 9, 1},
-//         {5, 6, 7, 8, 9, 1, 2, 3, 4},
-//         {8, 9, 1, 2, 3, 4, 5, 6, 7},
-//         {3, 4, 5, 6, 7, 8, 9, 1, 2},
-//         {6, 7, 8, 9, 1, 2, 3, 4, 5},
-//         {9, 1, 2, 3, 4, 5, 6, 7, 8}
-//     };
-
-//     int spiegelFeld[90];
-
-//     // Diagonale Spiegelung durchführen
-//     diagonaleSpiegelung(sudokuFeld, spiegelFeld);
-
-//     // Ausgabe des diagonal gespiegelten Feldes
-//     for (int i = 0; i < 9; ++i)
-//     {
-//         for (int j = 0; j < 9; ++j)
-//         {
-//             std::cout << spiegelFeld[i * 9 + j] << " ";
-//         }
-//         std::cout << std::endl;
-//     }
-//     return 0;
+//   for( int i = 0; i < 12; ++i )
+//     std::cout << distribute( generator ) << std::endl;
+//   return 0;
 // }
