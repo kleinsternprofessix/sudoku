@@ -1,8 +1,8 @@
-// //GLFW: https://www.glfw.org/docs/latest/quick.html
-// //OpenGL 3: https://www.freecodecamp.org/news/how-to-create-3d-and-2d-graphics-with-opengl-and-cpp/
-// //Dear ImGui: https://blog.conan.io/2019/06/26/An-introduction-to-the-Dear-ImGui-library.html
+//GLFW: https://www.glfw.org/docs/latest/quick.html
+//OpenGL 3: https://www.freecodecamp.org/news/how-to-create-3d-and-2d-graphics-with-opengl-and-cpp/
+//Dear ImGui: https://blog.conan.io/2019/06/26/An-introduction-to-the-Dear-ImGui-library.html
 
-// //Udemy Kurs: https://www.udemy.com/course/interaktive-gui-mit-c-und-imgui-praktische-beispiele/
+//Udemy Kurs: https://www.udemy.com/course/interaktive-gui-mit-c-und-imgui-praktische-beispiele/
 
 // #include <iostream>
 // using namespace std;
