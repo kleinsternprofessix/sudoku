@@ -239,7 +239,7 @@ void seed_handler(const int (&standard_grid)[IN], int (&new_grid)[IN]){
 
     std::cout << "Dieses Programm generiert ein Sudoku basierend auf einem 10 Ziffern langen Seed.\nBitte gib deinen Seed an: \n";
     std::cin >> seed;
-
+    
     //Funktionsaufruf basierend auf den Werten des Seeds
     for(int i = 0; i < seed_length; i++){
         switch (seed[i])
@@ -291,28 +291,36 @@ int level_select(){
     //Hier wird das Level ausgewählt. Dieses entscheidet darüber wie viele Zahlen im Feld bereits ausgefüllt sind
     int lvl;
 
-    std::cout << "Welcome to stern's sudoku!\n\nPlease select a level:\n  Level 1: 38 given numbers\n  Level 2: 30 given numbers\n  Level 3: 22 given numbers\n";
-    std::cin >> lvl;
+    std::cout << "Willkommen bei sterns sudoku!\n\nBitte waehle einen Schwierigkeitsgrad:\n  Level 1: 38 gegebene Ziffern\n  Level 2: 30 gegebene Ziffern\n  Level 3: 22 gegebene Ziffern\n";
+    do{
+        std::cin >> lvl;
+        if (lvl < 1 || lvl > 3)
+        {
+            std::cout << "Der von dir angegebene Schwierigkeitsgrad existiert nicht. Bitte waehle zwischen 1, 2 und 3.";
+        }
+    } while (lvl < 1 || lvl > 3);    
 
     return lvl;
 }
 
-void make_grid_playable(int (&new_grid)[IN], std::uint_least32_t(&rand_no)[50], std::uint_least32_t no_based_on_lvl, std::set<uint_least32_t> (&generatedNumbers)){
+void make_grid_playable(int (&new_grid)[IN], std::uint_least32_t no_based_on_lvl, std::set<uint_least32_t> (&generatedNumbers)){
+    //Hier werden alle Ziffern, bis auf die, die das Level festlegt gelöscht. Dies geschieht zufällig
     //Ich wollte, dass die Felder die im Feld gegeben sind zufällig ausgewählt werden und
     //habe mich dafür an folgendem Code orientiert: https://stackoverflow.com/a/62378892 (The Standart C++ Way)
 
-    std::random_device os_seed;
-    const uint_least32_t seed = os_seed();
+    std::random_device os_seed;             //Objekt, das einen zufälligen Seed generiert
+    const uint_least32_t seed = os_seed();  //Variable, die mit einem zufälligen Seed initialisiert wird
+    std::uint_least32_t rand_no;            //Variable in die die zufällige Zahl geschrieben wird
   
-    std::mt19937 generator( seed );
-    std::uniform_int_distribution< uint_least32_t > distribute( 0, 80 );
+    std::mt19937 generator( seed );         //generiert aus dem Seed  eine zufällige Zahl, wird hier mit seed initialisiert
+    std::uniform_int_distribution< uint_least32_t > distribute( 0, 80 );    //Verteilung, die zufällige Zahlen von 1-80 generiert
 
     //Zufällige Zahlen generieren und in Liste eintragen
-    for(std::uint_least32_t i = 0; i < no_based_on_lvl; ++i){
+    for(std::uint_least32_t i = 0; i < no_based_on_lvl; i++){
         do{
-            rand_no[i] = distribute( generator );
-        }while(generatedNumbers.count(rand_no[i]) > 0); //
-        generatedNumbers.insert(rand_no[i]);
+            rand_no = distribute( generator );
+        }while(generatedNumbers.count(rand_no) > 0);    //Existiert die neu generierte Zahl im Set mehr als 0 mal?
+        generatedNumbers.insert(rand_no);               //Neu generierte Zahl in Set einsetzen
     } 
     //Alles bisauf diese Zahlen löschen
     for(std::uint_least32_t i = 0; i < IN; ++i){
@@ -322,6 +330,7 @@ void make_grid_playable(int (&new_grid)[IN], std::uint_least32_t(&rand_no)[50], 
 }
 
 bool is_given(std::set<uint_least32_t> (&generatedNumbers), std::uint_least32_t row, std::uint_least32_t col){
+    //Prüft, ob die Zahl von vorhinein gegeben war
     if(generatedNumbers.count((row*9)+col) > 0)
     {
         std::cout << "Die von dir ausgewählte Koordinate war bereits gegeben! Wähle eine neue\n";
@@ -331,10 +340,10 @@ bool is_given(std::set<uint_least32_t> (&generatedNumbers), std::uint_least32_t 
 }
 
 bool is_valid(int (&new_grid)[IN], int input, std::uint_least32_t row, std::uint_least32_t col){
+    //Prüft, ob die Eingabe nach den Sudoku Regeln gültig ist
     std::uint_least32_t block_no;
     switch ((row*9)+col)
     {
-    //TODO
     //Block 1
     case 0:
     case 1:
@@ -493,18 +502,28 @@ void user_input(std::set<uint_least32_t> (&generatedNumbers), int (&new_grid)[IN
     int input;
 
     do{
-        std::cout << "\nWelches Feld möchtest du fuellen?" << "\nReihe: ";
-        std::cin >> row;
+        std::cout << "\nWelches Feld moechtest du fuellen?" << "\nReihe: ";
+        do{
+            std::cin >> row;
+            if(row > 9)
+                std::cout << "Die von dir angegebene Zahl lag nicht im Bereich 0-8!";
+        } while (row > 9);
         std::cout << "Spalte: ";
-        std::cin >> col;
+        do{
+            std::cin >> col;
+            if(col > 9)
+                std::cout << "Die von dir angegebene Zahl lag nicht im Bereich 0-8!";
+        } while (col > 9);
     } while (is_given(generatedNumbers, row, col));     //Prüfung, ob das gewollte Feld schon von vorhinein gefüllt war
 
     do{
-        std::cout << "\nWelche Zahl möchtest du eintragen?";
+        std::cout << "\nWelche Zahl moechtest du eintragen?";
         do{
             std::cin >> input;
+            if(input < 1 || input > 9)
+                std::cout << "Die von dir angegebene Zahl lag nicht im Bereich 1-9!";
         } while (input < 1 || input > 9);
-    } while (is_valid(new_grid, input, row, col));              //Prüfung, ob der eingegebene Wert mit Hinblick auf die Reihe, die Spalte und den 3x3 Block gültig ist
+    } while (is_valid(new_grid, input, row, col));      //Prüfung, ob der eingegebene Wert mit Hinblick auf die Reihe, die Spalte und den 3x3 Block gültig ist
     new_grid[(row*9)+col] = input;
 }
 
@@ -519,12 +538,11 @@ int main(){
                                    1, 7, 2, 9, 6, 5, 3, 4, 8,
                                    5, 8, 9, 2, 3, 4, 1, 6, 7};
     int new_grid[IN] = {0};
-    std::uint_least32_t rand_no[50] = {0};
     int level;
     std::uint_least32_t no_based_on_lvl = 0;
     std::set<uint_least32_t> generatedNumbers = {0};
     
-    level = level_select();                                    //Levelauswahl
+    level = level_select();                                             //Levelauswahl
     switch (level)
     {
     case 1:
@@ -539,26 +557,15 @@ int main(){
     default:
         break;
     }                        
-    seed_handler(standart_grid, new_grid);                     //Festlegung des Seeds mit dem das Spielfeld erstellt wird & Erstellung des Spielfeldes
-    make_grid_playable(new_grid, rand_no, no_based_on_lvl, generatedNumbers);    //Löschung von allen Zahlen bis auf denen, die das Level festlegt
+    seed_handler(standart_grid, new_grid);                              //Festlegung des Seeds mit dem das Spielfeld erstellt wird & Erstellung des Spielfeldes
+    make_grid_playable(new_grid, no_based_on_lvl, generatedNumbers);    //Löschung von allen Zahlen bis auf denen, die das Level festlegt
 
     //Spielverlauf
     do{
         display_grid(new_grid);                                //Darstellung des Spielfeldes
-        user_input(generatedNumbers, new_grid);        //Eingabe der Koordinaten und des neuen Werts durch den Spieler
+        user_input(generatedNumbers, new_grid);                //Eingabe der Koordinaten und des neuen Werts durch den Spieler
     } while (grid_complete_check(new_grid));                   //Prüfung, ob das Sudoku schon gelöst ist
     
     std::cout << "\n Herzlichen Glueckwunsch! Du hast das Sudoku geloest!";
     return 0;
 };
-
-//Dinge die mir Schwierigkeiten bereitet haben:
-//1) Den richtigen Weg finden das Sudoku Spielfeld zu speichern und damit umzugehen
-//  Zuerst dachte ich dabei an ein 2D Array, weil eine Sudoku Tabelle selbst ja zweidimensional ist und habe begonnen damit zu arbeiten. Die Handhabung damit, 
-//  vor allem wenn es darum ging dieses in Funktionen zu bearbeiten ist mir jedoch sehr schwer gefallen bzw. hat nicht funktioniert weshalb ich mich dann zu einem 
-//  eindimensionalen Array umentschieden habe. Auch damit hatte ich zuerst meine Probleme, weil ich es wegen der Beschaffenheit des Spielfeldes ja doch wie ein 2D-
-//  Array behandeln musste ich habe aber eine, wie ich finde gute Lösung gefunden indem ich in den Indexklammern jedes Mal den Index errechne und es wirklich behandle 
-//  als hätte es zwei Dimensionen. Auch bei der Übergabe an die Funktionen hatte ich anfangs Probleme aber das Arbeiten mit Referenzen hat diese für mich gelöst, auch
-//  wenn sie vermutlich nicht die performanteste Lösung darstellen.
-//2) How can i make it random which fields of the solution are shown
-// 
