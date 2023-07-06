@@ -2,6 +2,7 @@
 #include <cctype>
 #include <random>
 #include <set>
+#include <conio.h>
 
 #define N 9             //For loop index
 #define IN 81           //Array length index
@@ -505,15 +506,15 @@ void user_input(std::set<uint_least32_t> (&generatedNumbers), int (&new_grid)[IN
         std::cout << "\nWelches Feld moechtest du fuellen?" << "\nReihe: ";
         do{
             std::cin >> row;
-            if(row > 9)
+            if(row > 8)
                 std::cout << "Die von dir angegebene Zahl lag nicht im Bereich 0-8!";
-        } while (row > 9);
+        } while (row > 8);
         std::cout << "Spalte: ";
         do{
             std::cin >> col;
-            if(col > 9)
+            if(col > 8)
                 std::cout << "Die von dir angegebene Zahl lag nicht im Bereich 0-8!";
-        } while (col > 9);
+        } while (col > 8);
     } while (is_given(generatedNumbers, row, col));     //Prüfung, ob das gewollte Feld schon von vorhinein gefüllt war
 
     do{
@@ -567,5 +568,7 @@ int main(){
     } while (grid_complete_check(new_grid));                   //Prüfung, ob das Sudoku schon gelöst ist
     
     std::cout << "\n Herzlichen Glueckwunsch! Du hast das Sudoku geloest!";
+
+    getch();
     return 0;
 };
